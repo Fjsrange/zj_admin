@@ -8,6 +8,7 @@
 * {
   height: 100%;
   margin: 10px;
+  padding: 10px;
   background: #fff;
   border-radius: 5px;
 }

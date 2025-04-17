@@ -3,17 +3,14 @@
 <template>
   <div class="content">
     <h1>content</h1>
-    <img
-      src="@/assets/img/welcome.fc68b20.gif"
-      alt=""
-      style="width: 100%; height: 100%"
-    />
+    <img src="@/assets/img/welcome.fc68b20.gif" alt="" />
   </div>
 </template>
 
 <style scoped lang="scss">
 .content {
   position: relative;
+  height: 100%;
 
   h1 {
     z-index: 1;
@@ -24,10 +21,12 @@
   }
 
   img {
-    margin: 10px;
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 10px;
+    left: 10px;
+    width: calc(100% - 20px); /* 减去左右边距 */
+    height: calc(100% - 20px); /* 减去上下边距 */
+    box-sizing: border-box; /* 包含边距在内的总宽度和高度 */
   }
 }
 </style>
