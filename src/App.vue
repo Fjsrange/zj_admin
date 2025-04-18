@@ -2,11 +2,13 @@
 import Layout from "@/Layout/index.vue";
 
 console.log(import.meta.env);
+const token = localStorage.getItem("token");
 </script>
 
 <template>
   <!-- <router-view></router-view> -->
-  <Layout></Layout>
+  <Layout v-if="token"></Layout>
+  <router-view v-else></router-view>
 </template>
 
 <style lang="scss">

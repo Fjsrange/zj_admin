@@ -40,11 +40,7 @@ const breadcrumbs = computed(() => {
       </el-icon>
 
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item
-          v-for="(item, index) in breadcrumbs"
-          :key="index"
-          :to="{ path: item.path }"
-        >
+        <el-breadcrumb-item v-for="(item, index) in breadcrumbs" :key="index">
           {{ item.title }}
         </el-breadcrumb-item>
       </el-breadcrumb>

@@ -42,7 +42,7 @@ const routes:Route[] = [
   {
     path: '/teach',
     name: 'teach',
-    meta: { title: '教学管理', icon: 'EditPen', order: 3 },
+    meta: { title: '教学管理', icon: 'EditPen', order: 2 },
     children: [
       {
         path: '/teach/course',
@@ -94,12 +94,112 @@ const routes:Route[] = [
       },
     ]
   },
+  // 系统管理 system
+  {
+    
+    path: '/system',
+    name: 'system',
+    meta: { title: '系统管理', icon: 'Setting', order: 3 },
+    children: [
+      {
+        path: '/system/user',
+        name: 'user',
+        meta: { title: '用户', order: 1 },
+        component: () => import('@/view/system/user/index.vue')
+      },
+      {
+        path: '/system/role',
+        name: 'role',
+        meta: { title: '角色', order: 2 },
+        component: () => import('@/view/system/role/index.vue')
+      },
+      {
+        path: '/system/auth',
+        name: 'auth',
+        meta: { title: '权限', order: 3 },
+        component: () => import('@/view/system/auth/index.vue')
+      },
+    ]
+  },
+  // 教务管理 educational
+  {
+    
+    path: '/educational',
+    name: 'educational',
+    meta: { title: '教务管理', icon: 'Monitor', order: 4 },
+    children: [
+      {
+        path: '/educational/class',
+        name: 'class',
+        meta: { title: '班级', order: 1 },
+        component: () => import('@/view/educational/class/index.vue')
+      },
+      {
+        path: '/educational/classSchedule',
+        name: 'classSchedule',
+        meta: { title: '课表', order: 2 },
+        component: () => import('@/view/educational/classSchedule/index.vue')
+      },
+      {
+        path: '/educational/courseware',
+        name: 'courseware',
+        meta: { title: '课件', order: 3 },
+        component: () => import('@/view/educational/courseware/index.vue')
+      },
+      {
+        path: '/educational/signIn',
+        name: 'signIn',
+        meta: { title: '签到', order: 4 },
+        component: () => import('@/view/educational/signIn/index.vue')
+      },
+      {
+        path: '/educational/carouselMap',
+        name: 'carouselMap',
+        meta: { title: '轮播图', order: 5 },
+        component: () => import('@/view/educational/carouselMap/index.vue')
+      },
+    ]
+  },
+  // 销售管理 market
+  {
+    
+    path: '/market',
+    name: 'market',
+    meta: { title: '销售管理', icon: 'User', order: 5 },
+    children: [
+      {
+        path: '/market/student',
+        name: 'student',
+        meta: { title: '学生', order: 1 },
+        component: () => import('@/view/market/student/index.vue')
+      },
+      {
+        path: '/market/agent',
+        name: 'agent',
+        meta: { title: '代理商', order: 2 },
+        component: () => import('@/view/market/agent/index.vue')
+      },
+      {
+        path: '/market/salesperson',
+        name: 'salesperson',
+        meta: { title: '销售人员', order: 3 },
+        component: () => import('@/view/market/salesperson/index.vue')
+      },
+    ]
+  },
   {
     path: '/about',
     name: 'about',
     meta: { title: '关于', icon: 'InfoFilled', order: 9 },
     component: () => import('@/view/about/index.vue')
   },
+  {
+    path: '/login',
+    name: 'login',
+    meta: { title: '登录', hidden: true },
+    component: () => import('@/view/login/index.vue')
+  },
+  
 ]
 
 const router = createRouter({
@@ -107,5 +207,17 @@ const router = createRouter({
   routes
 })
 
+router.beforeEach((to, from, next) => {
+  if (to.path === '/login') {
+    next();
+  } else {
+    const token = localStorage.getItem('token');
+    if (token) {
+      next();
+    } else {
+      next('/login');
+    }
+  }
+});
 
 export default router;

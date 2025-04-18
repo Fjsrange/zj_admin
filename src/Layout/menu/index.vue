@@ -53,6 +53,7 @@ const navTo = (path: string) => {
       background-color="#545c64"
       class="el-menu-vertical-demo"
       default-active="2"
+      unique-opened
       text-color="#fff"
       :collapse="menuStore.isCollapse"
       @open="handleOpen"
