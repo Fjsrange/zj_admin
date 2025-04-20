@@ -12,7 +12,8 @@ const onSubmit = async () => {
     const { data } = await LoginApi(form.username, form.password);
     // 处理登录成功逻辑
     console.log("data", data);
-    return;
+    console.log("router", router);
+    // return;
     if (data.code === 200) {
       localStorage.setItem("token", data.data.token);
       localStorage.setItem("admin", JSON.stringify(data.data.admin));
@@ -20,7 +21,7 @@ const onSubmit = async () => {
       showMessage("success", "登录成功");
       setTimeout(() => {
         // 跳转到首页
-        router.push("/");
+        router.replace("/");
       }, 500);
     } else {
       showMessage("error", data.msg);

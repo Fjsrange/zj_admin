@@ -1,13 +1,19 @@
 <script setup lang="ts">
+import { computed } from "vue";
 import Layout from "@/Layout/index.vue";
+import { useRoute } from "vue-router";
 
 console.log(import.meta.env);
-const token = localStorage.getItem("token");
+const route = useRoute();
+
+const login = computed(() => {
+  return route.path === "/login";
+});
 </script>
 
 <template>
   <!-- <router-view></router-view> -->
-  <Layout v-if="token"></Layout>
+  <Layout v-if="!login"></Layout>
   <router-view v-else></router-view>
 </template>
 

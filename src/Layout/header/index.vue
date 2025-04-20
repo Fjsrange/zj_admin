@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import { useMenuStore } from "@/store/index";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 const circleUrl = ref<string>(
   "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
@@ -17,6 +17,7 @@ const toggleCollapse = () => {
 // 获取路由名称
 // 获取当前路由信息
 const route = useRoute();
+const router = useRouter();
 
 // 计算当前激活的菜单项
 const breadcrumbs = computed(() => {
@@ -29,6 +30,11 @@ const breadcrumbs = computed(() => {
   });
   return breadcrumbs;
 });
+
+const logOut = () => {
+  localStorage.clear(); // 清除本地存储
+  router.replace("/login");
+};
 </script>
 
 <template>
@@ -53,7 +59,15 @@ const breadcrumbs = computed(() => {
       </div>
       <div>
         <span> 张三</span>
-        <el-icon><ArrowDown /></el-icon>
+        <el-dropdown>
+          <el-icon><ArrowDown /></el-icon>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item>修改密码</el-dropdown-item>
+              <el-dropdown-item @click="logOut">退出登录</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
       </div>
     </div>
   </div>
