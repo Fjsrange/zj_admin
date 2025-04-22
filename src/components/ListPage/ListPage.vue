@@ -74,6 +74,34 @@ const {
   columnButtons,
 } = toRefs(props);
 
+const value = ref("");
+const cities = [
+  {
+    value: "Beijing",
+    label: "Beijing",
+  },
+  {
+    value: "Shanghai",
+    label: "Shanghai",
+  },
+  {
+    value: "Nanjing",
+    label: "Nanjing",
+  },
+  {
+    value: "Chengdu",
+    label: "Chengdu",
+  },
+  {
+    value: "Shenzhen",
+    label: "Shenzhen",
+  },
+  {
+    value: "Guangzhou",
+    label: "Guangzhou",
+  },
+];
+
 const emit = defineEmits(["query"]);
 
 // 每页显示条数
@@ -89,7 +117,7 @@ const handleCurrentChange = (val: number) => {
 };
 // 查询
 const handleQuery = () => {
-  console.log("查询");
+  console.log("查询", queryParams);
   emit("query", queryParams);
 };
 
@@ -109,6 +137,61 @@ onMounted(() => {
   <div>
     <!-- 查询区域 -->
     <el-form :inline="true" :model="queryParams" class="el-form--inline">
+      <el-form-item label="输入框">
+        <el-input
+          v-model="queryParams.name"
+          placeholder="请输入条件一"
+        ></el-input>
+      </el-form-item>
+
+      <el-form-item label="单选">
+        <el-select
+          v-model="queryParams.select"
+          placeholder="请选择"
+          style="width: 240px"
+        >
+          <el-option
+            v-for="item in cities"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+            <span style="float: left">{{ item.label }}</span>
+            <span
+              style="
+                float: right;
+                color: var(--el-text-color-secondary);
+                font-size: 13px;
+              "
+            >
+              {{ item.value }}
+            </span>
+          </el-option>
+        </el-select>
+      </el-form-item>
+
+      <el-form-item label="日期时间范围选择">
+        <el-date-picker
+          v-model="queryParams.datetimerange"
+          type="datetimerange"
+          start-placeholder="开始时间"
+          end-placeholder="结束时间"
+          format="YYYY-MM-DD HH:mm:ss"
+          date-format="YYYY/MM/DD ddd"
+          time-format="A hh:mm:ss"
+        />
+      </el-form-item>
+
+      <el-form-item label="日期范围选择">
+        <el-date-picker
+          v-model="queryParams.daterange"
+          type="daterange"
+          range-separator="To"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        />
+      </el-form-item>
+
       <el-form-item>
         <el-button type="primary" @click="handleQuery">查询</el-button>
         <el-button type="primary" @click="handleReset">重置</el-button>
@@ -167,20 +250,7 @@ onMounted(() => {
           v-bind="btn"
           :style="btn.style"
         >
-          <el-popconfirm
-            v-if="btn.label === '删除'"
-            title="确定删除这条记录吗？"
-            @confirm="btn?.onClick"
-          >
-            <template #reference>
-              <!-- <el-button>删除</el-button> -->
-              <component :is="btn.btnType" v-bind="btn" :style="btn.style">{{
-                btn.label
-              }}</component>
-            </template>
-          </el-popconfirm>
-
-          <div v-else>{{ btn.label }}</div>
+          <div>{{ btn.label }}</div>
         </component>
       </el-table-column>
     </el-table>
