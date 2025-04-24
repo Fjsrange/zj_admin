@@ -19,19 +19,19 @@ interface Button {
   style?: object; // 按钮样式
 }
 
-// const queryParams = ref({}); // 查询参数
-// const loading = ref(false); // 加载状态
-// const tableData = ref([{ name: "张三", age: 18, address: "北京市" }]); // 表格数据
-// const pagination = reactive({
-//   currentPage: 1, // 当前页码
-//   pageSize: 10, // 每页显示条数
-//   total: 0, // 总条数
-//   pageSizes: [10, 20, 50, 100], // 每页显示条数的选项
-//   layout: "total, sizes, prev, pager, next, jumper",
-//   size: "default", // 分页组件的尺寸
-//   background: true, // 是否显示背景色
-//   disabled: false, // 是否禁用
-// }); // 分页信息
+/* const queryParams = ref({}); // 查询参数
+const loading = ref(false); // 加载状态
+const tableData = ref([{ name: "张三", age: 18, address: "北京市" }]); // 表格数据
+const pagination = reactive({
+  currentPage: 1, // 当前页码
+  pageSize: 10, // 每页显示条数
+  total: 0, // 总条数
+  pageSizes: [10, 20, 50, 100], // 每页显示条数的选项
+  layout: "total, sizes, prev, pager, next, jumper",
+  size: "default", // 分页组件的尺寸
+  background: true, // 是否显示背景色
+  disabled: false, // 是否禁用
+}); // 分页信息 */
 
 const props = defineProps({
   tableData: {
@@ -43,8 +43,8 @@ const props = defineProps({
     default: false,
   },
   queryParams: {
-    type: Object,
-    default: () => ({}),
+    type: Array,
+    default: () => [],
   },
   pagination: {
     type: Object,
@@ -118,14 +118,14 @@ const handleCurrentChange = (val: number) => {
 // 查询
 const handleQuery = () => {
   console.log("查询", queryParams);
-  emit("query", queryParams);
+  // emit("query", queryParams);
 };
 
 // 重置
 const handleReset = () => {
   console.log("重置");
-  queryParams.value = {};
-  emit("query", queryParams);
+  // queryParams.value = {};
+  // emit("query", queryParams);
 };
 
 onMounted(() => {
@@ -137,65 +137,21 @@ onMounted(() => {
   <div>
     <!-- 查询区域 -->
     <el-form :inline="true" :model="queryParams" class="el-form--inline">
-      <el-form-item label="输入框">
-        <el-input
-          v-model="queryParams.name"
-          placeholder="请输入条件一"
-        ></el-input>
-      </el-form-item>
-
-      <el-form-item label="单选">
-        <el-select
-          v-model="queryParams.select"
-          placeholder="请选择"
-          style="width: 240px"
-        >
-          <el-option
-            v-for="item in cities"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          >
-            <span style="float: left">{{ item.label }}</span>
-            <span
-              style="
-                float: right;
-                color: var(--el-text-color-secondary);
-                font-size: 13px;
-              "
-            >
-              {{ item.value }}
-            </span>
-          </el-option>
-        </el-select>
-      </el-form-item>
-
-      <el-form-item label="日期时间范围选择">
-        <el-date-picker
-          v-model="queryParams.datetimerange"
-          type="datetimerange"
-          start-placeholder="开始时间"
-          end-placeholder="结束时间"
-          format="YYYY-MM-DD HH:mm:ss"
-          date-format="YYYY/MM/DD ddd"
-          time-format="A hh:mm:ss"
+      <el-form-item
+        :label="config.props.label + ':'"
+        v-for="(config, index) in queryParams"
+        :key="index"
+      >
+        <component
+          :is="config.elementType"
+          v-model="queryParams[config.props.value]"
+          v-bind="config.props"
+          @change="config.methods.change"
         />
       </el-form-item>
 
-      <el-form-item label="日期范围选择">
-        <el-date-picker
-          v-model="queryParams.daterange"
-          type="daterange"
-          range-separator="To"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        />
-      </el-form-item>
-
-      <el-form-item>
-        <el-button type="primary" @click="handleQuery">查询</el-button>
-        <el-button type="primary" @click="handleReset">重置</el-button>
-      </el-form-item>
+      <el-button type="primary" @click="handleQuery">查询</el-button>
+      <el-button type="primary" @click="handleReset">重置</el-button>
     </el-form>
 
     <!-- 操作区域 -->
@@ -250,7 +206,7 @@ onMounted(() => {
           v-bind="btn"
           :style="btn.style"
         >
-          <div>{{ btn.label }}</div>
+          <div v-if="btn.label !== '删除'">{{ btn.label }}</div>
         </component>
       </el-table-column>
     </el-table>

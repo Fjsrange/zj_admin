@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import ListPage from "@/components/ListPage/ListPage.vue";
 
+// 按钮类型
 type TopButtons = {
   label: string;
   type?: string;
@@ -10,6 +11,21 @@ type TopButtons = {
   style?: object;
   onClick?: (row?: any) => void;
 };
+// 查询参数类型
+interface QueryParams {
+  elementType: string;
+  props: {
+    label: string;
+    value?: string | number | array;
+    type: string;
+    placeholder: string;
+    clearable?: boolean;
+    rangeSeparator?: string;
+    startPlaceholder?: string;
+    endPlaceholder?: string;
+  };
+  methods?: (params: any) => void;
+}
 
 const tableData = ref([
   {
@@ -29,9 +45,40 @@ const tableData = ref([
   },
 ]);
 const loading = ref(false);
-const queryParams = ref({
-  name: "",
-});
+const queryParams = ref<QueryParams[]>([
+  {
+    elementType: "el-input",
+    props: {
+      label: "姓名",
+      value: "",
+      type: "text",
+      placeholder: "请输入姓名",
+    },
+    methods: {
+      change: (params: any) => {
+        console.log("params", params);
+      },
+    },
+  },
+  {
+    elementType: "el-date-picker",
+    props: {
+      label: "日期",
+      value: "",
+      type: "daterange",
+      placeholder: "请选择日期",
+      // clearable: true, // 是否显示清除按钮
+      rangeSeparator: "-",
+      startPlaceholder: "开始时间",
+      endPlaceholder: "结束时间",
+    },
+    methods: {
+      change: (params: any) => {
+        console.log("params", params);
+      },
+    },
+  },
+]);
 const pagination = ref({
   currentPage: 1, // 当前页码
   pageSize: 10, // 每页显示条数
