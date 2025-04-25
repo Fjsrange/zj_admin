@@ -1,5 +1,26 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted, toRefs } from "vue";
+import { ref, reactive, onMounted, toRefs, watch } from "vue";
+
+// 查询参数类型
+interface QueryProps {
+  title: string;
+  label: string;
+  value?: string | number;
+  type: string;
+  placeholder: string;
+  clearable?: boolean;
+  rangeSeparator?: string;
+  startPlaceholder?: string;
+  endPlaceholder?: string;
+}
+interface QueryMethods {
+  change?: (params: any) => void;
+}
+interface QueryParams {
+  elementType: string;
+  props: QueryProps;
+  methods?: QueryMethods;
+}
 
 interface Column {
   prop: string;
@@ -43,7 +64,7 @@ const props = defineProps({
     default: false,
   },
   queryParams: {
-    type: Array,
+    type: Array as () => QueryParams[],
     default: () => [],
   },
   pagination: {
@@ -73,6 +94,7 @@ const {
   topButtons,
   columnButtons,
 } = toRefs(props);
+const formData = ref<Record<string, any>>({}); // 查询表单数据
 
 const value = ref("");
 const cities = [
@@ -117,36 +139,51 @@ const handleCurrentChange = (val: number) => {
 };
 // 查询
 const handleQuery = () => {
-  console.log("查询", queryParams);
+  console.log("查询", formData.value);
   // emit("query", queryParams);
 };
 
 // 重置
 const handleReset = () => {
   console.log("重置");
-  // queryParams.value = {};
-  // emit("query", queryParams);
+  formData.value = {};
+  queryParams.value.forEach((config) => {
+    formData.value[config.props.label] = config.props.value;
+  });
 };
-
+// 监听queryParams变化，更新formData
+watch(
+  () => props.queryParams,
+  (newQueryParams) => {
+    newQueryParams.forEach((config) => {
+      formData.value[config.props.label] = config.props.value || "";
+    });
+  },
+  { deep: true }
+);
 onMounted(() => {
   console.log("onMounted");
+  // 初始化formData
+  props.queryParams.forEach((config) => {
+    formData.value[config.props.label] = config.props.value || "";
+  });
 });
 </script>
 
 <template>
   <div>
     <!-- 查询区域 -->
-    <el-form :inline="true" :model="queryParams" class="el-form--inline">
+    <el-form :inline="true" :model="formData" class="el-form--inline">
       <el-form-item
-        :label="config.props.label + ':'"
+        :label="config.props.title + ':'"
         v-for="(config, index) in queryParams"
         :key="index"
       >
         <component
           :is="config.elementType"
-          v-model="queryParams[config.props.value]"
+          v-model="formData[config.props.label]"
           v-bind="config.props"
-          @change="config.methods.change"
+          @change="config.methods?.change"
         />
       </el-form-item>
 
@@ -239,4 +276,8 @@ onMounted(() => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped lang="scss">
+.el-form--inline {
+  display: flex;
+}
+</style>

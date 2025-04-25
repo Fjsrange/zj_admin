@@ -15,8 +15,9 @@ type TopButtons = {
 interface QueryParams {
   elementType: string;
   props: {
+    title: string;
     label: string;
-    value?: string | number | array;
+    value?: string | number;
     type: string;
     placeholder: string;
     clearable?: boolean;
@@ -24,7 +25,9 @@ interface QueryParams {
     startPlaceholder?: string;
     endPlaceholder?: string;
   };
-  methods?: (params: any) => void;
+  methods?: {
+    change: (params: any) => void;
+  };
 }
 
 const tableData = ref([
@@ -49,32 +52,33 @@ const queryParams = ref<QueryParams[]>([
   {
     elementType: "el-input",
     props: {
-      label: "姓名",
+      title: "姓名",
+      label: "name",
       value: "",
       type: "text",
       placeholder: "请输入姓名",
     },
     methods: {
       change: (params: any) => {
-        console.log("params", params);
+        console.log("姓名", params);
       },
     },
   },
   {
     elementType: "el-date-picker",
     props: {
-      label: "日期",
+      title: "日期",
+      label: "date",
       value: "",
       type: "daterange",
       placeholder: "请选择日期",
-      // clearable: true, // 是否显示清除按钮
       rangeSeparator: "-",
       startPlaceholder: "开始时间",
       endPlaceholder: "结束时间",
     },
     methods: {
       change: (params: any) => {
-        console.log("params", params);
+        console.log("日期", params);
       },
     },
   },
