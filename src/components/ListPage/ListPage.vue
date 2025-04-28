@@ -155,19 +155,20 @@ const handleReset = () => {
 watch(
   () => props.queryParams,
   (newQueryParams) => {
+    console.log("newQueryParams", newQueryParams);
     newQueryParams.forEach((config) => {
       formData.value[config.props.label] = config.props.value || "";
     });
   },
   { deep: true }
 );
-onMounted(() => {
-  console.log("onMounted");
-  // 初始化formData
-  props.queryParams.forEach((config) => {
-    formData.value[config.props.label] = config.props.value || "";
-  });
-});
+// onMounted(() => {
+//   console.log("onMounted");
+//   // 初始化formData
+//   props.queryParams.forEach((config) => {
+//     formData.value[config.props.label] = config.props.value || "";
+//   });
+// });
 </script>
 
 <template>

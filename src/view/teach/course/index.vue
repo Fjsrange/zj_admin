@@ -82,6 +82,36 @@ const queryParams = ref<QueryParams[]>([
       },
     },
   },
+  {
+    elementType: "el-input",
+    props: {
+      title: "地址",
+      label: "address",
+      value: "",
+      type: "text",
+      placeholder: "请输入地址",
+    },
+    methods: {
+      change: (params: any) => {
+        console.log("地址", params);
+      },
+    },
+  },
+  {
+    elementType: "el-input-number",
+    props: {
+      title: "年龄",
+      label: "age",
+      value: "",
+      type: "number",
+      placeholder: "请输入年龄",
+    },
+    methods: {
+      change: (params: any) => {
+        console.log("年龄", params);
+      },
+    },
+  },
 ]);
 const pagination = ref({
   currentPage: 1, // 当前页码
