@@ -40,6 +40,17 @@ interface Button {
   style?: object; // 按钮样式
 }
 
+// 分页参数类型
+type Pagination = {
+  currentPage: number;
+  pageSize: number;
+  total: number;
+  pageSizes: number[];
+  layout: string;
+  size: string;
+  background: boolean;
+  disabled: boolean;
+};
 /* const queryParams = ref({}); // 查询参数
 const loading = ref(false); // 加载状态
 const tableData = ref([{ name: "张三", age: 18, address: "北京市" }]); // 表格数据
@@ -68,7 +79,7 @@ const props = defineProps({
     default: () => [],
   },
   pagination: {
-    type: Object,
+    type: Object as () => Pagination,
     default: () => ({}),
   },
   columns: {
@@ -129,7 +140,7 @@ const emit = defineEmits(["query"]);
 // 每页显示条数
 const handleSizeChange = (val: number) => {
   console.log(`每页${val} 条数据`);
-  pagination!.pageSize = val;
+  pagination.value.pageSize = val;
 };
 
 // 当前页
@@ -140,7 +151,11 @@ const handleCurrentChange = (val: number) => {
 // 查询
 const handleQuery = () => {
   console.log("查询", formData.value);
-  // emit("query", queryParams);
+  // 将查询参数传递给父组件
+  emit("query", {
+    formData: formData.value,
+    pagination: pagination.value,
+  });
 };
 
 // 重置
@@ -152,23 +167,23 @@ const handleReset = () => {
   });
 };
 // 监听queryParams变化，更新formData
-watch(
-  () => props.queryParams,
-  (newQueryParams) => {
-    console.log("newQueryParams", newQueryParams);
-    newQueryParams.forEach((config) => {
-      formData.value[config.props.label] = config.props.value || "";
-    });
-  },
-  { deep: true }
-);
-// onMounted(() => {
-//   console.log("onMounted");
-//   // 初始化formData
-//   props.queryParams.forEach((config) => {
-//     formData.value[config.props.label] = config.props.value || "";
-//   });
-// });
+// watch(
+//   () => props.queryParams,
+//   (newQueryParams) => {
+//     console.log("newQueryParams", newQueryParams);
+//     newQueryParams.forEach((config) => {
+//       formData.value[config.props.label] = config.props.value || "";
+//     });
+//   },
+//   { deep: true }
+// );
+onMounted(() => {
+  console.log("onMounted");
+  // 初始化formData
+  props.queryParams.forEach((config) => {
+    formData.value[config.props.label] = config.props.value || "";
+  });
+});
 </script>
 
 <template>

@@ -29,6 +29,17 @@ interface QueryParams {
     change: (params: any) => void;
   };
 }
+// 分页参数类型
+type Pagination = {
+  currentPage: number;
+  pageSize: number;
+  total: number;
+  pageSizes: number[];
+  layout: string;
+  size: string;
+  background: boolean;
+  disabled: boolean;
+};
 
 const tableData = ref([
   {
@@ -113,7 +124,7 @@ const queryParams = ref<QueryParams[]>([
     },
   },
 ]);
-const pagination = ref({
+const pagination = ref<Pagination>({
   currentPage: 1, // 当前页码
   pageSize: 10, // 每页显示条数
   total: 0, // 总条数
@@ -198,6 +209,11 @@ const handleSizeChange = (val: number) => {
 const handleCurrentChange = (val: number) => {
   console.log(`current page: ${val}`);
 };
+
+// 接收子组件emit过来的query事件
+const handleQuery = (params: any) => {
+  console.log("接收子组件查询到的数据", params);
+};
 </script>
 
 <template>
@@ -225,6 +241,7 @@ const handleCurrentChange = (val: number) => {
       :columns="columns"
       :topButtons="topButtons"
       :columnButtons="columnButtons"
+      @query="handleQuery"
     ></ListPage>
   </div>
 
