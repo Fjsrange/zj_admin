@@ -10,6 +10,23 @@ export const LoginApi = (username: string, password: string) => {
   return request.post('admin/user/login', {username, password});
 };
 
+/**
+ * 获取课程信息
+ */
+export const getCourseListApi = (data: object) => {
+  return request('admin/course/listPage', data);
+};
+// export default {
+//   getCourseListApi: {
+//     url: 'admin/course/listPage',
+//     method: 'get',
+//     data: {
+//       page: 10,
+//       limit: 10
+//     }
+//   }
+// }
+
 // 第二种
 // type LoginApi = {
 //   url: string;

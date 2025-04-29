@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted, toRefs, watch } from "vue";
+import { ref, reactive, onMounted, toRefs, watch, watchEffect } from "vue";
 
 // 查询参数类型
 interface QueryProps {
   title: string;
   label: string;
-  value?: string | number;
+  value?: string | number | boolean | Array<string | number | boolean>;
   type: string;
   placeholder: string;
+  min?: number;
+  max?: number;
   clearable?: boolean;
   rangeSeparator?: string;
   startPlaceholder?: string;
@@ -51,6 +53,7 @@ type Pagination = {
   background: boolean;
   disabled: boolean;
 };
+
 /* const queryParams = ref({}); // 查询参数
 const loading = ref(false); // 加载状态
 const tableData = ref([{ name: "张三", age: 18, address: "北京市" }]); // 表格数据
@@ -106,6 +109,7 @@ const {
   columnButtons,
 } = toRefs(props);
 const formData = ref<Record<string, any>>({}); // 查询表单数据
+let isInitialized = ref<boolean>(false);
 
 const value = ref("");
 const cities = [
@@ -177,13 +181,50 @@ const handleReset = () => {
 //   },
 //   { deep: true }
 // );
-onMounted(() => {
-  console.log("onMounted");
-  // 初始化formData
+// onMounted(() => {
+//   console.log("onMounted");
+//   // 初始化formData
+//   props.queryParams.forEach((config) => {
+//     formData.value[config.props.label] = config.props.value || "";
+//   });
+// });
+
+// watchEffect(() => {
+//   props.queryParams.forEach((config) => {
+//     console.log("config", config);
+//     if (config.elementType === "el-input-number") {
+//       formData.value[config.props.label] = config.props.value || null; // 初始化数字类型为0
+//     } else {
+//       formData.value[config.props.label] = config.props.value || "";
+//     }
+//   });
+// });
+const initFormData = () => {
   props.queryParams.forEach((config) => {
-    formData.value[config.props.label] = config.props.value || "";
+    if (config.elementType === "el-input-number") {
+      formData.value[config.props.label] = config.props.value || null; // 初始化数字类型为0
+    } else {
+      formData.value[config.props.label] = config.props.value || "";
+    }
   });
+};
+onMounted(() => {
+  initFormData();
 });
+
+// // 监听queryParams的变化，并更新formData
+watch(
+  () => formData.value,
+  (newQueryParams) => {
+    if (!isInitialized.value) {
+      isInitialized.value = true;
+      return;
+    }
+    console.log("newQueryParams", newQueryParams);
+    initFormData();
+  },
+  { deep: true }
+);
 </script>
 
 <template>
@@ -199,7 +240,6 @@ onMounted(() => {
           :is="config.elementType"
           v-model="formData[config.props.label]"
           v-bind="config.props"
-          @change="config.methods?.change"
         />
       </el-form-item>
 
@@ -248,7 +288,7 @@ onMounted(() => {
 
       <!-- 插槽 -->
       <el-table-column>
-        <template #default="scope"></template>
+        <template slot="imgSlot" slot-scope="text"> </template>
       </el-table-column>
 
       <el-table-column label="操作" fixed="right">
@@ -258,6 +298,7 @@ onMounted(() => {
           :is="btn.btnType"
           v-bind="btn"
           :style="btn.style"
+          v-show="btn.label !== '删除'"
         >
           <div v-if="btn.label !== '删除'">{{ btn.label }}</div>
         </component>

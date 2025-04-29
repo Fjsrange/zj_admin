@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import ListPage from "@/components/ListPage/ListPage.vue";
+import { getCourseListApi } from "@/apis/api.ts";
 
 // 按钮类型
 type TopButtons = {
@@ -20,6 +21,8 @@ interface QueryParams {
     value?: string | number;
     type: string;
     placeholder: string;
+    min?: number;
+    max?: number;
     clearable?: boolean;
     rangeSeparator?: string;
     startPlaceholder?: string;
@@ -51,6 +54,156 @@ const tableData = ref([
     date: "2016-05-04",
     name: "王小虎",
     address: "上海市普陀区金沙江路 1517 弄",
+  },
+  {
+    date: "2016-05-01",
+    name: "王小虎",
+    address: "上海市普陀区金沙江路 1519 弄",
+  },
+  {
+    date: "2016-05-01",
+    name: "王小虎",
+    address: "上海市普陀区金沙江路 1519 弄",
+  },
+  {
+    date: "2016-05-01",
+    name: "王小虎",
+    address: "上海市普陀区金沙江路 1519 弄",
+  },
+  {
+    date: "2016-05-01",
+    name: "王小虎",
+    address: "上海市普陀区金沙江路 1519 弄",
+  },
+  {
+    date: "2016-05-01",
+    name: "王小虎",
+    address: "上海市普陀区金沙江路 1519 弄",
+  },
+  {
+    date: "2016-05-01",
+    name: "王小虎",
+    address: "上海市普陀区金沙江路 1519 弄",
+  },
+  {
+    date: "2016-05-01",
+    name: "王小虎",
+    address: "上海市普陀区金沙江路 1519 弄",
+  },
+  {
+    date: "2016-05-01",
+    name: "王小虎",
+    address: "上海市普陀区金沙江路 1519 弄",
+  },
+  {
+    date: "2016-05-01",
+    name: "王小虎",
+    address: "上海市普陀区金沙江路 1519 弄",
+  },
+  {
+    date: "2016-05-01",
+    name: "王小虎",
+    address: "上海市普陀区金沙江路 1519 弄",
+  },
+  {
+    date: "2016-05-01",
+    name: "王小虎",
+    address: "上海市普陀区金沙江路 1519 弄",
+  },
+  {
+    date: "2016-05-01",
+    name: "王小虎",
+    address: "上海市普陀区金沙江路 1519 弄",
+  },
+  {
+    date: "2016-05-01",
+    name: "王小虎",
+    address: "上海市普陀区金沙江路 1519 弄",
+  },
+  {
+    date: "2016-05-01",
+    name: "王小虎",
+    address: "上海市普陀区金沙江路 1519 弄",
+  },
+  {
+    date: "2016-05-01",
+    name: "王小虎",
+    address: "上海市普陀区金沙江路 1519 弄",
+  },
+  {
+    date: "2016-05-01",
+    name: "王小虎",
+    address: "上海市普陀区金沙江路 1519 弄",
+  },
+  {
+    date: "2016-05-01",
+    name: "王小虎",
+    address: "上海市普陀区金沙江路 1519 弄",
+  },
+  {
+    date: "2016-05-01",
+    name: "王小虎",
+    address: "上海市普陀区金沙江路 1519 弄",
+  },
+  {
+    date: "2016-05-01",
+    name: "王小虎",
+    address: "上海市普陀区金沙江路 1519 弄",
+  },
+  {
+    date: "2016-05-01",
+    name: "王小虎",
+    address: "上海市普陀区金沙江路 1519 弄",
+  },
+  {
+    date: "2016-05-01",
+    name: "王小虎",
+    address: "上海市普陀区金沙江路 1519 弄",
+  },
+  {
+    date: "2016-05-01",
+    name: "王小虎",
+    address: "上海市普陀区金沙江路 1519 弄",
+  },
+  {
+    date: "2016-05-01",
+    name: "王小虎",
+    address: "上海市普陀区金沙江路 1519 弄",
+  },
+  {
+    date: "2016-05-01",
+    name: "王小虎",
+    address: "上海市普陀区金沙江路 1519 弄",
+  },
+  {
+    date: "2016-05-01",
+    name: "王小虎",
+    address: "上海市普陀区金沙江路 1519 弄",
+  },
+  {
+    date: "2016-05-01",
+    name: "王小虎",
+    address: "上海市普陀区金沙江路 1519 弄",
+  },
+  {
+    date: "2016-05-01",
+    name: "王小虎",
+    address: "上海市普陀区金沙江路 1519 弄",
+  },
+  {
+    date: "2016-05-01",
+    name: "王小虎",
+    address: "上海市普陀区金沙江路 1519 弄",
+  },
+  {
+    date: "2016-05-01",
+    name: "王小虎",
+    address: "上海市普陀区金沙江路 1519 弄",
+  },
+  {
+    date: "2016-05-01",
+    name: "王小虎",
+    address: "上海市普陀区金沙江路 1519 弄",
   },
   {
     date: "2016-05-01",
@@ -113,9 +266,10 @@ const queryParams = ref<QueryParams[]>([
     props: {
       title: "年龄",
       label: "age",
-      value: "",
+      value: 0,
       type: "number",
       placeholder: "请输入年龄",
+      min: 1,
     },
     methods: {
       change: (params: any) => {
@@ -195,6 +349,7 @@ const columnButtons = ref<TopButtons[]>([
     },
   },
 ]); // 列表操作按钮区域
+const formData = ref<Record<string, any>>({}); // 查询表单数据
 
 const currentPage = ref(1);
 const pageSize = ref(10);
@@ -202,38 +357,120 @@ const size = ref("default");
 const disabled = ref(false);
 const background = ref(true);
 
+// 设置每页条数
 const handleSizeChange = (val: number) => {
   console.log(`${val} items per page`);
+  pagination.value.pageSize = val;
 };
 
+// 选择页码
 const handleCurrentChange = (val: number) => {
   console.log(`current page: ${val}`);
+  pagination.value.currentPage = val;
+  initData();
 };
 
 // 接收子组件emit过来的query事件
 const handleQuery = (params: any) => {
   console.log("接收子组件查询到的数据", params);
 };
+// 重置
+const handleReset = () => {
+  console.log("重置");
+  formData.value = {};
+  queryParams.value.forEach((config) => {
+    formData.value[config.props.label] = config.props.value;
+  });
+};
+// 初始化列表数据
+const initData = () => {
+  loading.value = true; // 模拟异步请求
+  setTimeout(() => {
+    pagination.value.total = tableData.value.length;
+    loading.value = false;
+  }, 1000);
+};
+const pagin = computed(() => {});
+
+const getList = async () => {
+  let data = {
+    page: pagination.value.currentPage,
+    limit: pagination.value.pageSize,
+  };
+  let res = await getCourseListApi(data);
+  console.log("res", res);
+};
+onMounted(() => {
+  getList();
+  initData();
+});
 </script>
 
 <template>
-  <div class="">
-    <!-- 课程
-    <div style="display: flex; justify-content: center; align-items: center">
-      <el-pagination
-        v-model:current-page="currentPage"
-        v-model:page-size="pageSize"
-        :page-sizes="[10, 20, 30, 100]"
-        :size="size"
-        :disabled="disabled"
-        :background="background"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="10"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-      />
-    </div> -->
-    <ListPage
+  <div class="" style="height: 100%">
+    <el-container>
+      <el-header style="height: auto">
+        <!-- 查询区域 -->
+        <el-form :inline="true" :model="formData" class="el-form--inline">
+          <el-form-item
+            :label="config.props.title + ':'"
+            v-for="(config, index) in queryParams"
+            :key="index"
+          >
+            <component
+              :is="config.elementType"
+              v-model="formData[config.props.label]"
+              v-bind="config.props"
+            />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="handleQuery">查询</el-button>
+            <el-button type="primary" @click="handleReset">重置</el-button>
+          </el-form-item>
+        </el-form>
+
+        <el-divider style="margin: 10px 0" />
+
+        <!-- 操作区域 -->
+        <div>
+          <el-button
+            v-for="btn in topButtons"
+            :key="btn"
+            v-bind="btn"
+            :icon="btn.icon"
+          >
+            {{ btn.label }}
+          </el-button>
+        </div>
+      </el-header>
+      <el-main>
+        <el-table
+          v-loading="loading"
+          :data="tableData"
+          border
+          stripe
+          height="500"
+        >
+          <el-table-column type="index" label="序号" width="60" />
+          <el-table-column
+            v-if="columns.length > 0"
+            v-for="col in columns"
+            :key="col.prop"
+            :prop="col.prop"
+            :label="col.label"
+          >
+            <template #default="scope">
+              {{ scope.row[col.prop] }}
+            </template>
+          </el-table-column>
+
+          <el-table-column :label="'图片'" width="100">
+            <template slot="imgSlot" slot-scope="text"> </template>
+          </el-table-column>
+
+          <el-table-column label="操作" fixed="right"> </el-table-column>
+        </el-table>
+        <!-- <ListPage
       :tableData="tableData"
       :loading="loading"
       :queryParams="queryParams"
@@ -242,23 +479,28 @@ const handleQuery = (params: any) => {
       :topButtons="topButtons"
       :columnButtons="columnButtons"
       @query="handleQuery"
-    ></ListPage>
+    ></ListPage> -->
+      </el-main>
+      <el-footer>
+        <div
+          style="display: flex; justify-content: center; align-items: center"
+        >
+          <el-pagination
+            v-model:current-page="pagination.currentPage"
+            v-model:page-size="pagination.pageSize"
+            :page-sizes="pagination.pageSizes"
+            :size="pagination.size"
+            :disabled="pagination.disabled"
+            :background="pagination.background"
+            :layout="pagination.layout"
+            :total="pagination.total"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+          />
+        </div>
+      </el-footer>
+    </el-container>
   </div>
-
-  <!-- <div style="display: flex; justify-content: center; align-items: center">
-    <el-pagination
-      v-model:current-page="currentPage"
-      v-model:page-size="pageSize"
-      :page-sizes="[10, 20, 30, 100]"
-      :size="size"
-      :disabled="disabled"
-      :background="background"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="10"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-    />
-  </div> -->
 </template>
 
 <style scoped lang="scss"></style>
